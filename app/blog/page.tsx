@@ -75,7 +75,7 @@ export default function Blog() {
               height: "100px",
               padding: "10px",
               borderRadius: "8px",
-              border: "1px solid #ccc",
+              border: "1px solid "#c2ee3e"
             }}
           />
 
@@ -89,10 +89,10 @@ export default function Blog() {
                 key={i}
                 style={{
                   padding: "15px",
-                  border: "1px solid #eee",
+                  border: "1px solid #161317",
                   borderRadius: "10px",
                   marginBottom: "15px",
-                  background: "#fafafa",
+                  background: "#c2ee3e",
                 }}
               >
                 <p style={{ fontSize: "16px", lineHeight: "1.6" }}>
@@ -138,9 +138,9 @@ export default function Blog() {
                 style={{
                   padding: "20px",
                   borderRadius: "12px",
-                  border: "1px solid #ddd",
+                  border: "1px solid #161317",
                   marginBottom: "20px",
-                  background: "#f9f9f9",
+                  background: "#c2ee3e",
                 }}
               >
                 {/* Book Title */}
@@ -161,7 +161,7 @@ export default function Blog() {
                 </p>
 
                 {/* Action */}
-                <p style={{ fontSize: "15px", color: "#444" }}>
+                <p style={{ fontSize: "15px", color: "#161317" }}>
                   <strong>Applied:</strong> {entry.action}
                 </p>
               </div>
