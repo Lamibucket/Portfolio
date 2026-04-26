@@ -1,99 +1,90 @@
 "use client";
 import { useEffect, useState } from "react";
 
+type DayData = {
+  study: boolean;
+  workout: boolean;
+  journal: boolean;
+};
+
 export default function Days() {
-  const [completedDays, setCompletedDays] = useState<number[]>([]);
-  const [tasks, setTasks] = useState({
+  const [data, setData] = useState<Record<string, DayData>>({});
+  const [selectedDate, setSelectedDate] = useState("");
+
+  // 📅 Get today's date
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    setSelectedDate(today);
+  }, []);
+
+  // 🔹 Load from storage
+  useEffect(() => {
+    const saved = localStorage.getItem("dayData");
+    if (saved) setData(JSON.parse(saved));
+  }, []);
+
+  // 🔹 Save to storage
+  useEffect(() => {
+    localStorage.setItem("dayData", JSON.stringify(data));
+  }, [data]);
+
+  const current = data[selectedDate] || {
     study: false,
     workout: false,
     journal: false,
-  });
+  };
 
-  // 🔹 LOAD from localStorage
-  useEffect(() => {
-    const savedDays = localStorage.getItem("days");
-    const savedTasks = localStorage.getItem("tasks");
-
-    if (savedDays) setCompletedDays(JSON.parse(savedDays));
-    if (savedTasks) setTasks(JSON.parse(savedTasks));
-  }, []);
-
-  // 🔹 SAVE when days change
-  useEffect(() => {
-    localStorage.setItem("days", JSON.stringify(completedDays));
-  }, [completedDays]);
-
-  // 🔹 SAVE when tasks change
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  function toggleDay(day: number) {
-    setCompletedDays((prev) =>
-      prev.includes(day)
-        ? prev.filter((d) => d !== day)
-        : [...prev, day]
-    );
-  }
-
-  function toggleTask(task: string) {
-    setTasks((prev) => ({
+  function toggleTask(task: keyof DayData) {
+    setData((prev) => ({
       ...prev,
-      [task]: !prev[task as keyof typeof prev],
+      [selectedDate]: {
+        ...current,
+        [task]: !current[task],
+      },
     }));
   }
 
   return (
-    <main style={{ padding: "40px" }}>
+    <main style={{ padding: "40px", maxWidth: "600px" }}>
       <h1>Daily Tracker</h1>
 
-      {/* Days */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-        {Array.from({ length: 30 }, (_, i) => {
-          const day = i + 1;
-          const done = completedDays.includes(day);
+      {/* 📅 Date Picker */}
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+        style={{ marginBottom: "20px", padding: "8px" }}
+      />
 
-          return (
-            <div
-              key={day}
-              onClick={() => toggleDay(day)}
-              style={{
-                width: "50px",
-                height: "50px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "1px solid #ccc",
-                cursor: "pointer",
-                background: done ? "#4CAF50" : "#fff",
-                color: done ? "#fff" : "#000",
-              }}
-            >
-              {day}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Tasks */}
-      <section style={{ marginTop: "30px" }}>
-        <h2>Tasks</h2>
-
-        {Object.entries(tasks).map(([task, value]) => (
-          <div key={task}>
+      {/* ✅ Tasks */}
+      <div>
+        {Object.entries(current).map(([task, value]) => (
+          <div key={task} style={{ marginBottom: "10px" }}>
             <input
               type="checkbox"
               checked={value}
-              onChange={() => toggleTask(task)}
+              onChange={() => toggleTask(task as keyof DayData)}
             />
-            <label style={{ marginLeft: "8px" }}>{task}</label>
+            <label style={{ marginLeft: "8px", textTransform: "capitalize" }}>
+              {task}
+            </label>
           </div>
         ))}
+      </div>
 
-        {Object.values(tasks).every(Boolean) && (
-          <p style={{ color: "green" }}>Nice work! 🎉</p>
+      {/* 🎯 Progress */}
+      <div style={{ marginTop: "20px" }}>
+        <h3>
+          Progress:{" "}
+          {
+            Object.values(current).filter(Boolean).length
+          } / {Object.keys(current).length}
+        </h3>
+
+        {Object.values(current).every(Boolean) && (
+          <p style={{ color: "green" }}>Perfect day. 🔥</p>
         )}
-      </section>
+      </div>
     </main>
   );
 }
