@@ -75,7 +75,7 @@ export default function Blog() {
               height: "100px",
               padding: "10px",
               borderRadius: "8px",
-              border: "1px solid "#c2ee3e"
+              border: "1px solid #c2ee3e",
             }}
           />
 
@@ -92,6 +92,7 @@ export default function Blog() {
                   border: "1px solid #161317",
                   borderRadius: "10px",
                   marginBottom: "15px",
+                  
                   background: "#c2ee3e",
                 }}
               >
@@ -171,4 +172,4 @@ export default function Blog() {
       )}
     </main>
   );
-}
+} 
