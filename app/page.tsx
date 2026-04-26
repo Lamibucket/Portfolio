@@ -66,7 +66,7 @@ export default function Home() {
         <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
           <div
             style={navCard}
-            onClick={() => router.push("/days")}
+            onClick={() => router.push("/Days")}
           >
             <h3>📅 Days Tracker</h3>
             <p>Track your daily habits</p>
